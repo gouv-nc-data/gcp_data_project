@@ -1,61 +1,3 @@
-variable "project_name" {
-  type        = string
-  description = "nom du projet"
-}
-
-variable "dataset_name" {
-  type        = string
-  description = "nom du projet"
-}
-
-variable "region" {
-  type    = string
-  default = "europe-west1"
-}
-
-variable "default_billing_account" {
-  description = "Compte de facturation par défaut"
-  type        = string
-}
-
-variable "direction" {
-  description = "Direction du projet"
-  type        = string
-}
-
-variable "primary_contact" {
-  type = string
-}
-
-variable "secondary_contact" {
-  type = string
-}
-
-variable "group_name" {
-  type = string
-}
-
-variable "org_id" {
-  description = "id de l'organisation"
-  type        = number
-}
-
-output "project_id" {
-  value = module.project-factory.project_id
-}
-
-output "group_email" {
-  value = googleworkspace_group.grp-wks.email
-}
-
-output "dataset_id" {
-  value = module.bigquery-dataset.dataset_id
-}
-
-output "notification_channels" {
-  value = [google_monitoring_notification_channel.primary_contact.name, google_monitoring_notification_channel.secondary_contact.name]
-}
-
 locals {
   parent_folder_id = "658965356947" # production folder
   log_project_id   = "prj-p-log-and-monitor-ed1e"
@@ -105,17 +47,20 @@ resource "googleworkspace_group_settings" "grp-wks" {
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
 }
 
-resource "googleworkspace_group_member" "grp-wks-member1" {
+resource "googleworkspace_group_members" "grp-wks-members" {
+
   group_id = googleworkspace_group.grp-wks.id
-  email    = var.primary_contact
-  role     = "OWNER"
+
+  dynamic "members" {
+
+    for_each = toset(var.pj_contact_list)
+    content {
+      email = members.value
+      role  = "OWNER"
+    }
+  }
 }
 
-resource "googleworkspace_group_member" "grp-wks-member2" {
-  group_id = googleworkspace_group.grp-wks.id
-  email    = var.secondary_contact
-  role     = "OWNER"
-}
 
 ###############################
 # Droits sur bigquery
@@ -132,25 +77,17 @@ resource "google_project_iam_member" "main" {
 # Alertes
 ###############################
 
-resource "google_monitoring_notification_channel" "primary_contact" {
-  display_name = "Primary email contact for the project"
+resource "google_monitoring_notification_channel" "grp-wks" {
+  display_name = "grp-wks email contact for the project"
   type         = "email"
   project      = module.project-factory.project_id
 
   labels = {
-    email_address = var.primary_contact
+    email_address = googleworkspace_group.grp-wks.email
   }
+  force_delete = true
 }
 
-resource "google_monitoring_notification_channel" "secondary_contact" {
-  display_name = "Secondary email contact for the project"
-  type         = "email"
-  project      = module.project-factory.project_id
-
-  labels = {
-    email_address = var.secondary_contact
-  }
-}
 
 resource "google_monitoring_notification_channel" "org_admin_contact" {
   display_name = "Organization admins email contact"
@@ -159,6 +96,7 @@ resource "google_monitoring_notification_channel" "org_admin_contact" {
   labels = {
     email_address = "gcp-organization-admins@gouv.nc"
   }
+  force_delete = true
 }
 
 ###############################
@@ -185,21 +123,21 @@ resource "google_monitoring_monitored_project" "projects_monitored" {
 # ###############################
 # # Supervision
 # ###############################
-# resource "google_monitoring_alert_policy" "errors" {
-#   display_name = "Errors in logs alert policy"
-#   project      = module.project-factory.project_id
-#   combiner     = "OR"
-#   conditions {
-#     display_name = "Error condition"
-#     condition_matched_log {
-#       filter = "severity=ERROR"
-#     }
-#   }
+resource "google_monitoring_alert_policy" "errors" {
+  display_name = "Errors in logs alert policy"
+  project      = module.project-factory.project_id
+  combiner     = "OR"
+  conditions {
+    display_name = "Error condition"
+    condition_matched_log {
+      filter = "severity=ERROR"
+    }
+  }
 
-#   notification_channels = [google_monitoring_notification_channel.primary_contact.name]
-#   alert_strategy {
-#     notification_rate_limit {
-#       period = "300s"
-#     }
-#   }
-# }
+  notification_channels = [google_monitoring_notification_channel.grp-wks.name]
+  alert_strategy {
+    notification_rate_limit {
+      period = "300s"
+    }
+  }
+}
