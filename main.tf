@@ -57,20 +57,6 @@ resource "googleworkspace_group_member" "grp-wks-member" {
 
 }
 
-# resource "googleworkspace_group_members" "grp-wks-members" {
-
-#   group_id = googleworkspace_group.grp-wks.id
-
-#   dynamic "members" {
-
-#     for_each = toset(var.pj_contact_list)
-#     content {
-#       email = members.value
-#       role  = "OWNER"
-#     }
-#   }
-# }
-
 
 ###############################
 # Droits sur bigquery
