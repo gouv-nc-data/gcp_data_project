@@ -43,7 +43,7 @@ resource "googleworkspace_group" "grp-wks" {
 resource "googleworkspace_group_settings" "grp-wks" {
   email                 = googleworkspace_group.grp-wks.email
   allow_web_posting     = false
-  who_can_post_message  = "ALL_MEMBERS_CAN_POST"
+  who_can_post_message  = "ANYONE_CAN_POST"
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
 }
 
