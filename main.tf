@@ -118,26 +118,3 @@ resource "google_monitoring_monitored_project" "projects_monitored" {
   name          = module.project-factory.project_id
   depends_on    = [google_project_service.monitoring-service-monlog]
 }
-
-
-# ###############################
-# # Supervision
-# ###############################
-resource "google_monitoring_alert_policy" "errors" {
-  display_name = "Errors in logs alert policy"
-  project      = module.project-factory.project_id
-  combiner     = "OR"
-  conditions {
-    display_name = "Error condition"
-    condition_matched_log {
-      filter = "severity=ERROR"
-    }
-  }
-
-  notification_channels = [google_monitoring_notification_channel.grp-wks.name]
-  alert_strategy {
-    notification_rate_limit {
-      period = "300s"
-    }
-  }
-}
