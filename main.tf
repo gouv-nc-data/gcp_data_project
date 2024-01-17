@@ -43,22 +43,18 @@ resource "googleworkspace_group" "grp-wks" {
 resource "googleworkspace_group_settings" "grp-wks" {
   email                 = googleworkspace_group.grp-wks.email
   allow_web_posting     = false
-  who_can_post_message  = "ALL_MEMBERS_CAN_POST"
+  who_can_post_message  = "ANYONE_CAN_POST"
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
 }
 
-resource "googleworkspace_group_members" "grp-wks-members" {
-
+resource "googleworkspace_group_member" "grp-wks-member" {
+  count    = length(var.pj_contact_list)
   group_id = googleworkspace_group.grp-wks.id
 
-  dynamic "members" {
+  email = var.pj_contact_list[count.index]
 
-    for_each = toset(var.pj_contact_list)
-    content {
-      email = members.value
-      role  = "OWNER"
-    }
-  }
+  role = "OWNER"
+
 }
 
 
