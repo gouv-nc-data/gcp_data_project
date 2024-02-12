@@ -1,6 +1,7 @@
 locals {
   parent_folder_id = "658965356947" # production folder
   log_project_id   = "prj-p-log-and-monitor-ed1e"
+  pj_bq_viewer_ls  = var.pj_bq_viewer_ls == null ? var.pj_bq_adm_ls : var.pj_bq_viewer_ls
 }
 
 module "project-factory" {
@@ -67,9 +68,9 @@ resource "googleworkspace_group_settings" "grp-wks-viewer" {
 }
 
 resource "googleworkspace_group_member" "grp-wks-member-viewer" {
-  count    = length(var.pj_bq_viewer_ls)
+  count    = length(local.pj_bq_viewer_ls)
   group_id = googleworkspace_group.grp-wks-viewer.id
-  email = var.pj_bq_viewer_ls[count.index]
+  email = local.pj_bq_viewer_ls[count.index]
   role = "OWNER"
 }
 
