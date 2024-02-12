@@ -39,5 +39,5 @@ variable "pj_bq_adm_ls" {
 
 variable "pj_bq_viewer_ls" {
   type    = list(string)
-  default = null
+  default = var.pj_bq_adm_ls
 }
