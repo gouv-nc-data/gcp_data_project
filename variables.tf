@@ -32,7 +32,12 @@ variable "org_id" {
   type        = number
 }
 
-variable "pj_contact_list" {
+variable "pj_bq_adm_ls" {
+  type    = list(string)
+  default = null
+}
+
+variable "pj_bq_viewer_ls" {
   type    = list(string)
   default = null
 }

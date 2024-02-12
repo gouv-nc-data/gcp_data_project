@@ -1,6 +1,7 @@
 locals {
   parent_folder_id = "658965356947" # production folder
   log_project_id   = "prj-p-log-and-monitor-ed1e"
+  pj_bq_viewer_ls  = var.pj_bq_viewer_ls == null ? var.pj_bq_adm_ls : var.pj_bq_viewer_ls
 }
 
 module "project-factory" {
@@ -32,7 +33,7 @@ module "bigquery-dataset" {
 }
 
 ###############################
-# Groupe associé au projet
+# Groupes associés au projet
 ###############################
 
 resource "googleworkspace_group" "grp-wks" {
@@ -48,15 +49,30 @@ resource "googleworkspace_group_settings" "grp-wks" {
 }
 
 resource "googleworkspace_group_member" "grp-wks-member" {
-  count    = length(var.pj_contact_list)
+  count    = length(var.pj_bq_adm_ls)
   group_id = googleworkspace_group.grp-wks.id
-
-  email = var.pj_contact_list[count.index]
-
+  email = var.pj_bq_adm_ls[count.index]
   role = "OWNER"
-
 }
 
+resource "googleworkspace_group" "grp-wks-viewer" {
+  email       = "${var.group_name}-viewers@gouv.nc"
+  description = "Groupe permettant d'ajouter des membres avec permissions en lecture BigQuery"
+}
+
+resource "googleworkspace_group_settings" "grp-wks-viewer" {
+  email                 = googleworkspace_group.grp-wks-viewer.email
+  allow_web_posting     = false
+  who_can_post_message  = "ANYONE_CAN_POST"
+  who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
+}
+
+resource "googleworkspace_group_member" "grp-wks-member-viewer" {
+  count    = length(local.pj_bq_viewer_ls)
+  group_id = googleworkspace_group.grp-wks-viewer.id
+  email = local.pj_bq_viewer_ls[count.index]
+  role = "OWNER"
+}
 
 ###############################
 # Droits sur bigquery
@@ -66,6 +82,20 @@ resource "google_project_iam_member" "main" {
   for_each = toset(["group:${googleworkspace_group.grp-wks.email}", ])
   project  = module.project-factory.project_id
   role     = "roles/bigquery.admin"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "main-viewer" {
+  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ])
+  project  = module.project-factory.project_id
+  role     = "roles/bigquery.dataViewer"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "main-jobuser" {
+  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ])
+  project  = module.project-factory.project_id
+  role     = "roles/bigquery.jobUser"
   member   = each.value
 }
 
