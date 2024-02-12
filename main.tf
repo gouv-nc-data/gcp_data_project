@@ -36,6 +36,7 @@ module "bigquery-dataset" {
 # Groupes associés au projet
 ###############################
 
+# bq dataform nb admin
 resource "googleworkspace_group" "grp-wks" {
   email       = "${var.group_name}@gouv.nc"
   description = "Groupe permettant la gestion des ressources du projet "
@@ -55,6 +56,7 @@ resource "googleworkspace_group_member" "grp-wks-member" {
   role = "OWNER"
 }
 
+# bq viewers
 resource "googleworkspace_group" "grp-wks-viewer" {
   email       = "${var.group_name}-viewers@gouv.nc"
   description = "Groupe permettant d'ajouter des membres avec permissions en lecture BigQuery"
@@ -81,7 +83,7 @@ resource "googleworkspace_group_member" "grp-wks-member-viewer" {
 resource "google_project_iam_member" "main" {
   for_each = toset(["group:${googleworkspace_group.grp-wks.email}", ])
   project  = module.project-factory.project_id
-  role     = "roles/bigquery.admin"
+  role     = "roles/bigquery.studioAdmin"
   member   = each.value
 }
 
