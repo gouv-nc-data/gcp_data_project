@@ -6,6 +6,10 @@ output "group_email" {
   value = googleworkspace_group.grp-wks.email
 }
 
+output "group_email" {
+  value = googleworkspace_group.grp-wks.email
+}
+
 output "dataset_id" {
   value = module.bigquery-dataset.dataset_id
 }
