@@ -2,8 +2,8 @@ output "project_id" {
   value = module.project-factory.project_id
 }
 
-output "group_email" {
-  value = googleworkspace_group.grp-wks.email
+output "project_number" {
+  value = module.project-factory.project_number
 }
 
 output "group_email" {
