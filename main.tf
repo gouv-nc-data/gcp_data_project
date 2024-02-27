@@ -106,8 +106,8 @@ resource "google_project_iam_member" "main-jobuser" {
 ###############################
 resource "google_project_iam_member" "project-viewer" {
   project  = module.project-factory.project_id
-  role     = "roles/Rlepersonnalis"
-  member   = "group:all-agents@gouv.nc"
+  role     = "roles/browser"
+  member   = "group:allgouv@gouv.nc"
 }
 
 ###############################
