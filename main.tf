@@ -11,6 +11,7 @@ module "project-factory" {
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
   group_name                  = var.group_name
+  group_role                  = "roles/viewer"
   random_project_id           = true
   budget_alert_spent_percents = [50, 75, 90]
   budget_amount               = 100
