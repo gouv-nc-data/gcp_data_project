@@ -91,7 +91,7 @@ resource "google_project_iam_member" "main" {
 resource "google_project_iam_member" "main-viewer" {
   for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ])
   project  = module.project-factory.project_id
-  role     = "roles/bigquery.dataViewer"
+  role     = "roles/bigquery.resourceViewer"
   member   = each.value
 }
 
