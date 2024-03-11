@@ -53,8 +53,8 @@ resource "googleworkspace_group_settings" "grp-wks" {
 resource "googleworkspace_group_member" "grp-wks-member" {
   count    = length(var.pj_bq_adm_ls)
   group_id = googleworkspace_group.grp-wks.id
-  email = var.pj_bq_adm_ls[count.index]
-  role = "OWNER"
+  email    = var.pj_bq_adm_ls[count.index]
+  role     = "OWNER"
 }
 
 # bq viewers
@@ -64,18 +64,18 @@ resource "googleworkspace_group" "grp-wks-viewer" {
 }
 
 resource "googleworkspace_group_settings" "grp-wks-viewer" {
-  email                 = googleworkspace_group.grp-wks-viewer.email
-  allow_web_posting     = false
+  email                  = googleworkspace_group.grp-wks-viewer.email
+  allow_web_posting      = false
   allow_external_members = true
-  who_can_post_message  = "ANYONE_CAN_POST"
-  who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
+  who_can_post_message   = "ANYONE_CAN_POST"
+  who_can_contact_owner  = "ALL_MEMBERS_CAN_CONTACT"
 }
 
 resource "googleworkspace_group_member" "grp-wks-member-viewer" {
   count    = length(local.pj_bq_viewer_ls)
   group_id = googleworkspace_group.grp-wks-viewer.id
-  email = local.pj_bq_viewer_ls[count.index]
-  role = "OWNER"
+  email    = local.pj_bq_viewer_ls[count.index]
+  role     = "OWNER"
 }
 
 ###############################
@@ -107,9 +107,9 @@ resource "google_project_iam_member" "main-jobuser" {
 # Droits de visu sur le projet pour permettre le partage
 ###############################
 resource "google_project_iam_member" "project-viewer" {
-  project  = module.project-factory.project_id
-  role     = "roles/browser"
-  member   = "group:allgouv@gouv.nc"
+  project = module.project-factory.project_id
+  role    = "roles/browser"
+  member  = "group:allgouv@gouv.nc"
 }
 
 ###############################
