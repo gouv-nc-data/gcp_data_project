@@ -66,6 +66,7 @@ resource "googleworkspace_group" "grp-wks-viewer" {
 resource "googleworkspace_group_settings" "grp-wks-viewer" {
   email                 = googleworkspace_group.grp-wks-viewer.email
   allow_web_posting     = false
+  allow_external_members = true
   who_can_post_message  = "ANYONE_CAN_POST"
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
 }
