@@ -2,6 +2,7 @@ locals {
   parent_folder_id = "658965356947" # production folder
   log_project_id   = "prj-p-log-and-monitor-ed1e"
   pj_bq_viewer_ls  = var.pj_bq_viewer_ls == null ? var.pj_bq_adm_ls : var.pj_bq_viewer_ls
+  pj_bq_editor_ls  = var.pj_bq_editor_ls == null ? var.pj_bq_adm_ls : var.pj_bq_editor_ls
 }
 
 module "project-factory" {
@@ -27,20 +28,22 @@ module "project-factory" {
 }
 
 module "bigquery-dataset" {
+  count      = var.dataset_name != null ? 1 : 0
   source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset?ref=v26.0.0"
   project_id = module.project-factory.project_id
   id         = var.dataset_name
   location   = "EU"
 }
 
-###############################
+#---------------------------------------------------------
 # Groupes associés au projet
-###############################
+#---------------------------------------------------------
 
-# bq dataform nb admin
+# admin
+#----------------------------------
 resource "googleworkspace_group" "grp-wks" {
   email       = "${var.group_name}@gouv.nc"
-  description = "Groupe permettant la gestion des ressources du projet "
+  description = "Groupe admin permettant la gestion des ressources liées à Bigquery du projet"
 }
 
 resource "googleworkspace_group_settings" "grp-wks" {
@@ -57,10 +60,45 @@ resource "googleworkspace_group_member" "grp-wks-member" {
   role     = "OWNER"
 }
 
-# bq viewers
+resource "google_project_iam_member" "main" {
+  project  = module.project-factory.project_id
+  role     = "roles/bigquery.studioAdmin"
+  member   = "group:${googleworkspace_group.grp-wks.email}"
+}
+
+# editor
+#----------------------------------
+resource "googleworkspace_group" "grp-wks-editor" {
+  email       = "${var.group_name}-editor@gouv.nc"
+  description = "Groupe des membres avec permissions en écriture BigQuery"
+}
+
+resource "googleworkspace_group_settings" "grp-wks-editor" {
+  email                 = googleworkspace_group.grp-wks-editor.email
+  allow_web_posting     = false
+  who_can_post_message  = "ANYONE_CAN_POST"
+  who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
+}
+
+resource "googleworkspace_group_member" "grp-wks-member-editor" {
+  count    = length(local.pj_bq_editor_ls)
+  group_id = googleworkspace_group.grp-wks-editor.id
+  email    = local.pj_bq_editor_ls[count.index]
+  role     = "OWNER"
+}
+
+resource "google_project_iam_member" "main-editor" {
+  for_each = toset(["roles/bigquery.dataEditor","roles/bigquery.jobUser"])
+  project  = module.project-factory.project_id
+  role     = each.value
+  member   = "group:${googleworkspace_group.grp-wks-editor.email}"
+}
+
+# viewers
+#----------------------------------
 resource "googleworkspace_group" "grp-wks-viewer" {
   email       = "${var.group_name}-viewers@gouv.nc"
-  description = "Groupe permettant d'ajouter des membres avec permissions en lecture BigQuery"
+  description = "Groupe des membres avec permissions en lecture BigQuery"
 }
 
 resource "googleworkspace_group_settings" "grp-wks-viewer" {
@@ -78,43 +116,25 @@ resource "googleworkspace_group_member" "grp-wks-member-viewer" {
   role     = "OWNER"
 }
 
-###############################
-# Droits sur bigquery
-###############################
-
-resource "google_project_iam_member" "main" {
-  for_each = toset(["group:${googleworkspace_group.grp-wks.email}", ])
-  project  = module.project-factory.project_id
-  role     = "roles/bigquery.studioAdmin"
-  member   = each.value
-}
-
 resource "google_project_iam_member" "main-viewer" {
-  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ])
+  for_each = toset(["roles/bigquery.resourceViewer", "roles/bigquery.jobUser"])
   project  = module.project-factory.project_id
-  role     = "roles/bigquery.resourceViewer"
-  member   = each.value
+  role     = each.key
+  member   = "group:${googleworkspace_group.grp-wks-viewer.email}"
 }
 
-resource "google_project_iam_member" "main-jobuser" {
-  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ])
-  project  = module.project-factory.project_id
-  role     = "roles/bigquery.jobUser"
-  member   = each.value
-}
-
-###############################
+#---------------------------------------------------------
 # Droits de visu sur le projet pour permettre le partage
-###############################
+#---------------------------------------------------------
 resource "google_project_iam_member" "project-viewer" {
   project = module.project-factory.project_id
   role    = "roles/browser"
   member  = "group:allgouv@gouv.nc"
 }
 
-###############################
+#---------------------------------------------------------
 # Alertes
-###############################
+#---------------------------------------------------------
 
 resource "google_monitoring_notification_channel" "grp-wks" {
   display_name = "grp-wks email contact for the project"
@@ -138,9 +158,9 @@ resource "google_monitoring_notification_channel" "org_admin_contact" {
   force_delete = true
 }
 
-###############################
+#---------------------------------------------------------
 # Logging
-###############################
+#---------------------------------------------------------
 
 resource "google_project_service" "monitoring-service-monlog" {
   project = module.project-factory.project_id
