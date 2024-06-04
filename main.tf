@@ -25,7 +25,7 @@ module "project-factory" {
 }
 
 module "bigquery-dataset" {
-  source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset?ref=v26.0.0"
+  source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset?ref=v31.1.0"
   project_id = module.project-factory.project_id
   id         = var.dataset_name
   location   = "EU"
