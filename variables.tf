@@ -40,12 +40,12 @@ variable "pj_bq_adm_ls" {
 
 variable "pj_bq_viewer_ls" {
   description = "liste des membres du groupe editor gérés par terraform"
-  type    = list(string)
-  default = null
+  type        = list(string)
+  default     = null
 }
 
 variable "pj_bq_editor_ls" {
   description = "liste des membres du groupe editor gérés par terraform"
-  type    = list(string)
-  default = null
+  type        = list(string)
+  default     = null
 }

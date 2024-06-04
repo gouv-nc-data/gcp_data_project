@@ -61,9 +61,9 @@ resource "googleworkspace_group_member" "grp-wks-member" {
 }
 
 resource "google_project_iam_member" "main" {
-  project  = module.project-factory.project_id
-  role     = "roles/bigquery.studioAdmin"
-  member   = "group:${googleworkspace_group.grp-wks.email}"
+  project = module.project-factory.project_id
+  role    = "roles/bigquery.studioAdmin"
+  member  = "group:${googleworkspace_group.grp-wks.email}"
 }
 
 # editor
@@ -88,7 +88,7 @@ resource "googleworkspace_group_member" "grp-wks-member-editor" {
 }
 
 resource "google_project_iam_member" "main-editor" {
-  for_each = toset(["roles/bigquery.dataEditor","roles/bigquery.jobUser"])
+  for_each = toset(["roles/bigquery.dataEditor", "roles/bigquery.jobUser"])
   project  = module.project-factory.project_id
   role     = each.value
   member   = "group:${googleworkspace_group.grp-wks-editor.email}"
