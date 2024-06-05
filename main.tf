@@ -41,7 +41,7 @@ module "bigquery-dataset" {
 # admin
 #----------------------------------
 resource "googleworkspace_group" "grp-wks" {
-  email       = "${var.group_name}@gouv.nc"
+  email       = "${var.group_name}-admin@gouv.nc"
   description = "Groupe editeur sur le projet et admin des ressources bigquery"
 }
 
