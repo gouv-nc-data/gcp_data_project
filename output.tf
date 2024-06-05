@@ -11,7 +11,7 @@ output "group_email" {
 }
 
 output "dataset_id" {
-  value = one(module.bigquery-dataset[*].dataset_id)
+  value = module.bigquery-dataset.dataset_id
 }
 
 
