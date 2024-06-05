@@ -43,7 +43,7 @@ module "bigquery-dataset" {
 #----------------------------------
 resource "googleworkspace_group" "grp-wks" {
   email       = "${var.group_name}@gouv.nc"
-  description = "Groupe admin permettant la gestion des ressources liées à Bigquery du projet"
+  description = "Groupe editeur sur le projet et admin des ressources bigquery"
 }
 
 resource "googleworkspace_group_settings" "grp-wks" {
@@ -61,16 +61,17 @@ resource "googleworkspace_group_member" "grp-wks-member" {
 }
 
 resource "google_project_iam_member" "main" {
-  project = module.project-factory.project_id
-  role    = "roles/bigquery.studioAdmin"
-  member  = "group:${googleworkspace_group.grp-wks.email}"
+  for_each = toset(["group:${googleworkspace_group.grp-wks.email}", ]) # depreciate mais plante si on change
+  project  = module.project-factory.project_id
+  role     = "roles/bigquery.studioAdmin"
+  member   = each.value
 }
 
 # editor
 #----------------------------------
 resource "googleworkspace_group" "grp-wks-editor" {
   email       = "${var.group_name}-editor@gouv.nc"
-  description = "Groupe des membres avec permissions en écriture BigQuery"
+  description = "Groupe avec permissions en écriture BigQuery"
 }
 
 resource "googleworkspace_group_settings" "grp-wks-editor" {
@@ -98,7 +99,7 @@ resource "google_project_iam_member" "main-editor" {
 #----------------------------------
 resource "googleworkspace_group" "grp-wks-viewer" {
   email       = "${var.group_name}-viewers@gouv.nc"
-  description = "Groupe des membres avec permissions en lecture BigQuery"
+  description = "Groupe avec permissions en lecture BigQuery"
 }
 
 resource "googleworkspace_group_settings" "grp-wks-viewer" {
@@ -117,10 +118,17 @@ resource "googleworkspace_group_member" "grp-wks-member-viewer" {
 }
 
 resource "google_project_iam_member" "main-viewer" {
-  for_each = toset(["roles/bigquery.resourceViewer", "roles/bigquery.jobUser"])
+  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
   project  = module.project-factory.project_id
-  role     = each.key
-  member   = "group:${googleworkspace_group.grp-wks-viewer.email}"
+  role     = "roles/bigquery.resourceViewer"
+  member   = each.value
+}
+
+resource "google_project_iam_member" "main-jobuser" {
+  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
+  project  = module.project-factory.project_id
+  role     = "roles/bigquery.jobUser"
+  member   = each.value
 }
 
 #---------------------------------------------------------
