@@ -28,7 +28,6 @@ module "project-factory" {
 }
 
 module "bigquery-dataset" {
-  count      = var.dataset_name != null ? 1 : 0
   source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset?ref=v26.0.0"
   project_id = module.project-factory.project_id
   id         = var.dataset_name
