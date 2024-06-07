@@ -11,7 +11,7 @@ module "project-factory" {
   name                        = var.project_name
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
-  group_name                  = var.group_name
+  group_name                  = "${var.group_name}-admin"
   group_role                  = "roles/editor"
   random_project_id           = true
   budget_alert_spent_percents = [50, 75, 90]
@@ -41,7 +41,8 @@ module "bigquery-dataset" {
 # admin
 #----------------------------------
 resource "googleworkspace_group" "grp-wks" {
-  email       = "${var.group_name}@gouv.nc"
+  email       = "${var.group_name}-admin@gouv.nc"
+  name        = "${var.group_name}-admin"
   description = "Groupe editeur sur le projet et admin des ressources bigquery"
 }
 
