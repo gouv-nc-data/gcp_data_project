@@ -7,7 +7,7 @@ locals {
 
 module "project-factory" {
   source                      = "terraform-google-modules/project-factory/google"
-  version                     = "~> 14.3"
+  version                     = "~> 17.0"
   name                        = var.project_name
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
@@ -25,6 +25,7 @@ module "project-factory" {
   activate_apis = [
     "bigquery.googleapis.com",
   ]
+  deletion_policy = "DELETE" # compatibility update 16>17
 }
 
 module "bigquery-dataset" {
@@ -120,18 +121,25 @@ resource "googleworkspace_group_member" "grp-wks-member-viewer" {
   role     = "OWNER"
 }
 
-resource "google_project_iam_member" "main-viewer" {
-  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
-  project  = module.project-factory.project_id
-  role     = "roles/bigquery.resourceViewer"
-  member   = each.value
-}
+# resource "google_project_iam_member" "main-viewer" {
+#   for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
+#   project  = module.project-factory.project_id
+#   role     = "roles/bigquery.dataViewer"
+#   member   = each.value
+# }
 
-resource "google_project_iam_member" "main-jobuser" {
-  for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
+# resource "google_project_iam_member" "main-jobuser" {
+#   for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
+#   project  = module.project-factory.project_id
+#   role     = "roles/bigquery.jobUser"
+#   member   = each.value
+# }
+
+resource "google_project_iam_member" "main-viewer" {
+  for_each = toset(["roles/bigquery.dataViewer", "roles/bigquery.jobUser"])
   project  = module.project-factory.project_id
-  role     = "roles/bigquery.jobUser"
-  member   = each.value
+  role     = each.value
+  member   = "group:${googleworkspace_group.grp-wks-viewer.email}"
 }
 
 #---------------------------------------------------------
