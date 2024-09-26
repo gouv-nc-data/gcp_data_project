@@ -25,7 +25,7 @@ module "project-factory" {
   activate_apis = [
     "bigquery.googleapis.com",
   ]
-  deletion_policy = "DELETE" # compatibility update 16>17
+  # deletion_policy = "DELETE" # compatibility update 16>17
 }
 
 module "bigquery-dataset" {
