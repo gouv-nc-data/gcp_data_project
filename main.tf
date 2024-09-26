@@ -7,7 +7,7 @@ locals {
 
 module "project-factory" {
   source                      = "terraform-google-modules/project-factory/google"
-  version                     = "~> 17.0"
+  version                     = "~> 14.3"
   name                        = var.project_name
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
