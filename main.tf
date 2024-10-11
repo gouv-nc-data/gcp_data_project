@@ -111,7 +111,7 @@ resource "googleworkspace_group_settings" "grp-wks-viewer" {
   allow_external_members = true
   who_can_post_message   = "ANYONE_CAN_POST"
   who_can_contact_owner  = "ALL_MEMBERS_CAN_CONTACT"
-  primary_language      = "en_US"
+  primary_language       = "en_US"
 }
 
 resource "googleworkspace_group_member" "grp-wks-member-viewer" {
