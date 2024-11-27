@@ -6,6 +6,7 @@ variable "project_name" {
 variable "dataset_name" {
   type        = string
   description = "nom du projet"
+  default     = null
 }
 
 variable "region" {

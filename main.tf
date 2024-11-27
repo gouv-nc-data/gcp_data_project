@@ -29,6 +29,8 @@ module "project-factory" {
 }
 
 module "bigquery-dataset" {
+  count = var.dataset_name != null ? 1 : 0
+
   source     = "git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset?ref=v26.0.0"
   project_id = module.project-factory.project_id
   id         = var.dataset_name
@@ -120,20 +122,6 @@ resource "googleworkspace_group_member" "grp-wks-member-viewer" {
   email    = local.pj_bq_viewer_ls[count.index]
   role     = "OWNER"
 }
-
-# resource "google_project_iam_member" "main-viewer" {
-#   for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
-#   project  = module.project-factory.project_id
-#   role     = "roles/bigquery.dataViewer"
-#   member   = each.value
-# }
-
-# resource "google_project_iam_member" "main-jobuser" {
-#   for_each = toset(["group:${googleworkspace_group.grp-wks-viewer.email}", ]) # depreciate mais plante si on change
-#   project  = module.project-factory.project_id
-#   role     = "roles/bigquery.jobUser"
-#   member   = each.value
-# }
 
 resource "google_project_iam_member" "main-viewer" {
   for_each = toset(["roles/bigquery.dataViewer", "roles/bigquery.jobUser"])
