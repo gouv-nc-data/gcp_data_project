@@ -11,7 +11,7 @@ output "group_email" {
 }
 
 output "dataset_id" {
-  value = var.dataset_name ? one(module.bigquery-dataset).dataset_id : null
+  value = var.dataset_name != null ? one(module.bigquery-dataset).dataset_id : null
 }
 
 
