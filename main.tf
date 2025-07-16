@@ -132,11 +132,17 @@ resource "google_project_iam_member" "main-viewer" {
 }
 
 #---------------------------------------------------------
-# Droits de visu sur le projet pour permettre le partage
+# Droits sur le projet entier pour tout le GNC
 #---------------------------------------------------------
 resource "google_project_iam_member" "project-viewer" {
   project = module.project-factory.project_id
   role    = "roles/browser"
+  member  = "group:allgouv@gouv.nc"
+}
+
+resource "google_project_iam_member" "project-jobUser" {
+  project = module.project-factory.project_id
+  role    = "roles/bigquery.jobUser" # pour avoir jobs.create, n'est pas permissif tant que l'user n'est pas viewer de la donnée
   member  = "group:allgouv@gouv.nc"
 }
 
