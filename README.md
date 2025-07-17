@@ -1,3 +1,8 @@
+# Projet d'infrastructure GCP
+
+## Introduction
+Ce module vise à provisionner un projet sur Google Cloud Platform (GCP) en utilisant Terraform. 
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
