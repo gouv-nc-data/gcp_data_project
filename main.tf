@@ -14,7 +14,7 @@ module "project-factory" {
   group_name                  = "${var.group_name}-admin"
   group_role                  = "roles/editor"
   random_project_id           = true
-  budget_alert_spent_percents = [50, 75, 90]
+  budget_alert_spent_percents = [0.5, 0.75, 0.9]
   budget_amount               = 100
   create_project_sa           = false
   default_service_account     = "delete"
