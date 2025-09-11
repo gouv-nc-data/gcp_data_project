@@ -7,7 +7,7 @@ locals {
 
 module "project-factory" {
   source                      = "terraform-google-modules/project-factory/google"
-  version                     = "~> 14.3"
+  version                     = "~> 18.1"
   name                        = var.project_name
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
@@ -26,7 +26,6 @@ module "project-factory" {
     "bigquery.googleapis.com",
     "logging.googleapis.com"
   ]
-  # deletion_policy = "DELETE" # compatibility update 16>17
 }
 
 module "bigquery-dataset" {
