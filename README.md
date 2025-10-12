@@ -20,7 +20,7 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_bigquery-dataset"></a> [bigquery-dataset](#module\_bigquery-dataset) | git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset | v26.0.0 |
-| <a name="module_project-factory"></a> [project-factory](#module\_project-factory) | terraform-google-modules/project-factory/google | ~> 14.3 |
+| <a name="module_project-factory"></a> [project-factory](#module\_project-factory) | terraform-google-modules/project-factory/google | ~> 18.1 |
 
 ## Resources
 
