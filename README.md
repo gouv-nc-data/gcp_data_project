@@ -66,6 +66,8 @@ No requirements.
 |------|-------------|
 | <a name="output_dataset_id"></a> [dataset\_id](#output\_dataset\_id) | n/a |
 | <a name="output_group_email"></a> [group\_email](#output\_group\_email) | n/a |
+| <a name="output_group_email_editor"></a> [group\_email\_editor](#output\_group\_email\_editor) | n/a |
+| <a name="output_group_email_viewer"></a> [group\_email\_viewer](#output\_group\_email\_viewer) | n/a |
 | <a name="output_notification_channels"></a> [notification\_channels](#output\_notification\_channels) | n/a |
 | <a name="output_project_id"></a> [project\_id](#output\_project\_id) | n/a |
 | <a name="output_project_number"></a> [project\_number](#output\_project\_number) | n/a |
