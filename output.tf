@@ -10,6 +10,14 @@ output "group_email" {
   value = googleworkspace_group.grp-wks.email
 }
 
+output "group_email_editor" {
+  value = googleworkspace_group.grp-wks-editor.email
+}
+
+output "group_email_viewer" {
+  value = googleworkspace_group.grp-wks-viewer.email
+}
+
 output "dataset_id" {
   value = var.dataset_name != null ? one(module.bigquery-dataset).dataset_id : null
 }
