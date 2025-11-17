@@ -20,7 +20,7 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_bigquery-dataset"></a> [bigquery-dataset](#module\_bigquery-dataset) | git::https://github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/bigquery-dataset | v26.0.0 |
-| <a name="module_project-factory"></a> [project-factory](#module\_project-factory) | terraform-google-modules/project-factory/google | ~> 18.1 |
+| <a name="module_project-factory"></a> [project-factory](#module\_project-factory) | terraform-google-modules/project-factory/google | ~> 18.2 |
 
 ## Resources
 
@@ -51,6 +51,7 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | <a name="input_dataset_name"></a> [dataset\_name](#input\_dataset\_name) | nom du projet | `string` | `null` | no |
 | <a name="input_default_billing_account"></a> [default\_billing\_account](#input\_default\_billing\_account) | Compte de facturation par défaut | `string` | n/a | yes |
+| <a name="input_deletion_policy"></a> [deletion\_policy](#input\_deletion\_policy) | Policy for for the project deletion. Options are: DELETE, PREVENT | `string` | `"PREVENT"` | no |
 | <a name="input_direction"></a> [direction](#input\_direction) | Direction du projet | `string` | n/a | yes |
 | <a name="input_group_name"></a> [group\_name](#input\_group\_name) | n/a | `string` | n/a | yes |
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | id de l'organisation | `number` | n/a | yes |
