@@ -49,3 +49,9 @@ variable "pj_bq_editor_ls" {
   type        = list(string)
   default     = null
 }
+
+variable "deletion_policy" {
+  description = "Policy for for the project deletion. Options are: DELETE, PREVENT"
+  type        = string
+  default     = "PREVENT"
+}
