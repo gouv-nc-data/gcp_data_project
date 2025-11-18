@@ -51,6 +51,7 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | <a name="input_dataset_name"></a> [dataset\_name](#input\_dataset\_name) | nom du projet | `string` | `null` | no |
 | <a name="input_default_billing_account"></a> [default\_billing\_account](#input\_default\_billing\_account) | Compte de facturation par défaut | `string` | n/a | yes |
+| <a name="input_default_service_account"></a> [default\_service\_account](#input\_default\_service\_account) | Action à effectuer sur les comptes de service par défaut | `string` | `"delete"` | no |
 | <a name="input_deletion_policy"></a> [deletion\_policy](#input\_deletion\_policy) | Policy for for the project deletion. Options are: DELETE, PREVENT | `string` | `"PREVENT"` | no |
 | <a name="input_direction"></a> [direction](#input\_direction) | Direction du projet | `string` | n/a | yes |
 | <a name="input_group_name"></a> [group\_name](#input\_group\_name) | n/a | `string` | n/a | yes |
