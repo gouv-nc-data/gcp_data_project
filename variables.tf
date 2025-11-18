@@ -55,3 +55,9 @@ variable "default_service_account" {
   type        = string
   default     = "delete"
 }
+
+variable "deletion_policy" {
+  description = "Policy for for the project deletion. Options are: DELETE, PREVENT"
+  type        = string
+  default     = "PREVENT"
+}

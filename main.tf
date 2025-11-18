@@ -7,7 +7,7 @@ locals {
 
 module "project-factory" {
   source                      = "terraform-google-modules/project-factory/google"
-  version                     = "~> 18.1"
+  version                     = "~> 18.2"
   name                        = var.project_name
   org_id                      = var.org_id
   billing_account             = var.default_billing_account
@@ -19,6 +19,7 @@ module "project-factory" {
   create_project_sa           = false
   default_service_account     = var.default_service_account
   folder_id                   = "folders/${local.parent_folder_id}"
+  deletion_policy             = var.deletion_policy
   labels = {
     direction = var.direction
   }
