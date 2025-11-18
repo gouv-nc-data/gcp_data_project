@@ -17,7 +17,7 @@ module "project-factory" {
   budget_alert_spent_percents = [0.5, 0.75, 0.9]
   budget_amount               = 100
   create_project_sa           = false
-  default_service_account     = "delete"
+  default_service_account     = var.default_service_account
   folder_id                   = "folders/${local.parent_folder_id}"
   labels = {
     direction = var.direction

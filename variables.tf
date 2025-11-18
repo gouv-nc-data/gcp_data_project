@@ -49,3 +49,9 @@ variable "pj_bq_editor_ls" {
   type        = list(string)
   default     = null
 }
+
+variable "default_service_account" {
+  description = "Action à effectuer sur les comptes de service par défaut"
+  type        = string
+  default     = "delete"
+}
