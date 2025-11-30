@@ -56,6 +56,10 @@ resource "googleworkspace_group_settings" "grp-wks" {
   who_can_post_message  = "ANYONE_CAN_POST"
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
   primary_language      = "en_US"
+
+  lifecycle {
+    ignore_changes = [who_can_assist_content]
+  }
 }
 
 resource "googleworkspace_group_member" "grp-wks-member" {
@@ -85,6 +89,10 @@ resource "googleworkspace_group_settings" "grp-wks-editor" {
   who_can_post_message  = "ANYONE_CAN_POST"
   who_can_contact_owner = "ALL_MEMBERS_CAN_CONTACT"
   primary_language      = "en_US"
+
+  lifecycle {
+    ignore_changes = [who_can_assist_content]
+  }
 }
 
 resource "googleworkspace_group_member" "grp-wks-member-editor" {
@@ -115,6 +123,10 @@ resource "googleworkspace_group_settings" "grp-wks-viewer" {
   who_can_post_message   = "ANYONE_CAN_POST"
   who_can_contact_owner  = "ALL_MEMBERS_CAN_CONTACT"
   primary_language       = "en_US"
+
+  lifecycle {
+    ignore_changes = [who_can_assist_content]
+  }
 }
 
 resource "googleworkspace_group_member" "grp-wks-member-viewer" {
