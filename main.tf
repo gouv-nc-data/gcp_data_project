@@ -25,7 +25,8 @@ module "project-factory" {
   }
   activate_apis = [
     "bigquery.googleapis.com",
-    "logging.googleapis.com"
+    "logging.googleapis.com",
+    "cloudaicompanion.googleapis.com"
   ]
 }
 
